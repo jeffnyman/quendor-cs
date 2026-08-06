@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Quendor.ZMachine.Core\Quendor.ZMachine.Core.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>quendor</AssemblyName>
+    <Description>A specification-accurate Z-Machine interpreter.</Description>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>quendor</ToolCommandName>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

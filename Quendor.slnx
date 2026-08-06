@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Quendor.Cli/Quendor.Cli.csproj" />
+    <Project Path="src/Quendor.ZMachine.Core/Quendor.ZMachine.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Quendor.ZMachine.Core.Tests/Quendor.ZMachine.Core.Tests.csproj" />
+  </Folder>
+</Solution>

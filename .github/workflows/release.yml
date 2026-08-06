@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+env:
+  HUSKY: 0
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: Test
+        run: dotnet test
+
+  create-release:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --draft --generate-notes
+
+  publish:
+    needs: create-release
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rid: [win-x64, linux-x64, linux-arm64, osx-x64, osx-arm64]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: Publish self-contained binary
+        run: >
+          dotnet publish src/Quendor.Cli -c Release
+          -r ${{ matrix.rid }} --self-contained
+          -p:PublishSingleFile=true -p:DebugType=embedded
+          -p:Version="${GITHUB_REF_NAME#v}"
+          -o out
+      - name: Archive
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          cd out
+          case "${{ matrix.rid }}" in
+            win-*) zip "../quendor-$VERSION-${{ matrix.rid }}.zip" quendor.exe ;;
+            *) tar czf "../quendor-$VERSION-${{ matrix.rid }}.tar.gz" quendor ;;
+          esac
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" quendor-* --clobber

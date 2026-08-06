@@ -1,0 +1,29 @@
+<Project>
+
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Product>Quendor</Product>
+    <Authors>Jeff Nyman</Authors>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0">
+    <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory="$(MSBuildThisFileDirectory)" />
+    <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory="$(MSBuildThisFileDirectory)" />
+  </Target>
+
+  <PropertyGroup>
+    <Version>0.1.0</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/jeffnyman/quendor-cs</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jeffnyman/quendor-cs</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+</Project>

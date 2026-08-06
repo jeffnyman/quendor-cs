@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+first_line=$(head -n 1 "$1")
+
+# Merge, fixup, and squash commits are exempt; they never reach main intact.
+case "$first_line" in
+  Merge\ * | fixup!\ * | squash!\ *) exit 0 ;;
+esac
+
+pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9._/-]+\))?!?: .+'
+
+if ! printf '%s' "$first_line" | grep -qE "$pattern"; then
+  echo "Commit message does not follow Conventional Commits:" >&2
+  echo "" >&2
+  echo "  $first_line" >&2
+  echo "" >&2
+  echo "Expected: type(optional-scope): description" >&2
+  echo "Types: build chore ci docs feat fix perf refactor revert style test" >&2
+  exit 1
+fi
